@@ -19,12 +19,14 @@ int bolt_parser_build_tree(bolt_syntax_parser_t *parser) {
     };
 
     size_t func_buffer_pos;
-    char function_buffer[1024];
+
+    // max func buffer = size of file.. no chance of ever overflowing
+    char function_buffer[parser->source->data_length];
 
     while (ctx.pos < parser->source->data_length) {
         int token = 0;
 
-        if ((token = bolt_syntax_search_find_keyword(BOLT_FUNCTION, &ctx)) == 4) {
+        if (parser->source->data[ctx.pos] != ' ' && (token = bolt_syntax_search_find_keyword(BOLT_FUNCTION, &ctx))) {
             func_buffer_pos = 0;
 
             ctx.mode = BOLT_MODE_BLOCK; // we're now searching for the name & then a full block of code like: { ... }
@@ -32,15 +34,16 @@ int bolt_parser_build_tree(bolt_syntax_parser_t *parser) {
 
             char c = parser->source->data[ctx.pos];
 
-            char *func_name;
-
             while ((c != '(')) {
+                if (c == ' ')
+                    c = parser->source->data[(ctx.pos + 1) + func_buffer_pos + 1];
+
                 function_buffer[func_buffer_pos] = c;
 
                 c = parser->source->data[(ctx.pos + 1) + func_buffer_pos++];
             }
 
-            func_name = malloc(func_buffer_pos + 1);
+            char *func_name = malloc(func_buffer_pos + 1);
 
             // Now we need to get the name of the function.
             memcpy(func_name, function_buffer, func_buffer_pos);
@@ -48,6 +51,16 @@ int bolt_parser_build_tree(bolt_syntax_parser_t *parser) {
 
             printf("function loaded: %s\n", func_name);
 
+            ctx.pos += func_buffer_pos + 1;
+      //      printf("char: %c\n", parser->source->data[ctx.pos]);
+
+            func_buffer_pos = 0;
+
+            // find block
+            int block_length = bolt_syntax_search_next_block(&ctx, function_buffer);
+
+            printf("block found, length: %i\n", block_length);
+            printf("function: %s\n", function_buffer);
             free(func_name);
         }
 

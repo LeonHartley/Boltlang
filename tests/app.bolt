@@ -1,9 +1,20 @@
-func functionTwo(num) {
+module app
+
+obj User {
+    id int
+    username string
+    password string
+}
+
+func functionTwo(user User) {
+    if(user.id == 0) {
+        log("user id is not set", .error)
+        return;
+    }
+
 
 }
 
-func functionOne(num) {
-
+func functionOne(user User) {
+    print("kek");
 }
-
-

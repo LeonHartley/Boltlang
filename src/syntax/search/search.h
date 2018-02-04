@@ -17,23 +17,6 @@ typedef struct bolt_syntax_search_ctx_s {
     int block_end_ctr;
 } bolt_syntax_search_ctx_t;
 
-int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_search_ctx_t *ctx) {
-    bolt_lang_t *lang = ctx->parser->lang;
+int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_search_ctx_t *ctx);
 
-    for (int i = 0; i < lang->keywords_count; i++) {
-        bolt_lang_keyword_t *keyword = lang->keywords[i];
-        int j;
-
-        for (j = 0; j < keyword->length; j++) {
-            if (ctx->parser->source->data[ctx->pos + j] != keyword->keyword[j]) {
-                break;
-            }
-        }
-
-        if (j >= keyword->length) {
-            return j;
-        }
-    }
-
-    return 0;
-}
+int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer);
