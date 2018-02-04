@@ -13,16 +13,16 @@ int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_sea
 
         for (j = 0; j < keyword->length; j++) {
             if (ctx->parser->source->data[ctx->pos + j] != keyword->keyword[j]) {
-    break;
-}
-}
+                break;
+            }
+        }
 
-if (j >= keyword->length) {
-return j;
-}
-}
+        if (j >= keyword->length) {
+            return j;
+        }
+    }
 
-return 0;
+    return 0;
 }
 
 int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer) {
@@ -35,12 +35,12 @@ int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer) {
 
         buffer[length++] = c;
 
-        if(c == '{') {
+        if (c == '{') {
             in_block++;
-        } else if(c == '}') {
+        } else if (c == '}') {
             in_block--;
 
-            if(in_block == 0) {
+            if (in_block == 0) {
                 buffer[length++] = '\0';
 
                 return length;
