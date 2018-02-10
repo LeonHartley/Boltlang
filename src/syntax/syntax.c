@@ -7,8 +7,47 @@ bolt_syntax_parser_t *bolt_parser_create(bolt_lang_t *lang, bolt_source_file_t *
 
     parser->source = source_file;
     parser->lang = lang;
+    parser->tree = malloc(sizeof(bolt_syntax_tree_t));
 
     return parser;
+}
+
+int bolt_parser_function(bolt_syntax_search_ctx_t *ctx, char *buffer) {
+    int func_name_len = bolt_syntax_search_until(ctx, '(', buffer);
+    char *func_name = malloc((size_t) (func_name_len + 1));
+
+    memcpy(func_name, buffer, (size_t) func_name_len);
+
+    func_name[func_name_len] = '\0';
+
+    printf("function loaded: %s\n", func_name);
+
+    return func_name_len + 1;
+}
+
+int bolt_parser_object(bolt_syntax_search_ctx_t *ctx, char *buffer) {
+    int obj_name_len = bolt_syntax_search_until(ctx, ' ', buffer);
+    char *obj_name = malloc((size_t) (obj_name_len + 1));
+
+    memcpy(obj_name, buffer, (size_t) obj_name_len);
+
+    obj_name[obj_name_len] = '\0';
+
+    printf("object loaded: %s\n", obj_name);
+    return obj_name_len + 1;
+}
+
+int bolt_parser_module_name(bolt_syntax_search_ctx_t *ctx,char *buffer) {
+    int module_name_len = bolt_syntax_search_until(ctx, ';', buffer);
+
+    ctx->parser->tree->module_name = malloc((size_t) (module_name_len + 1));
+    memcpy(ctx->parser->tree->module_name, buffer, (size_t) module_name_len);
+
+    ctx->parser->tree->module_name[module_name_len] = '\0';
+
+    printf("module loaded: %s\n", ctx->parser->tree->module_name);
+
+    return module_name_len + 1;
 }
 
 int bolt_parser_build_tree(bolt_syntax_parser_t *parser) {
@@ -18,50 +57,25 @@ int bolt_parser_build_tree(bolt_syntax_parser_t *parser) {
             .pos = 0
     };
 
-    size_t func_buffer_pos;
-
-    // max func buffer = size of file.. no chance of ever overflowing
-    char function_buffer[parser->source->data_length];
+    char script_buffer[parser->source->data_length];
 
     while (ctx.pos < parser->source->data_length) {
         int token = 0;
 
-        if (parser->source->data[ctx.pos] != ' ' && (token = bolt_syntax_search_find_keyword(BOLT_FUNCTION, &ctx))) {
-            func_buffer_pos = 0;
-
-            ctx.mode = BOLT_MODE_BLOCK; // we're now searching for the name & then a full block of code like: { ... }
+        if (parser->tree->module_name == NULL && (token = bolt_syntax_search_find_keyword(BOLT_MODULE_NAME, &ctx))) {
             ctx.pos += token + 1;
 
-            char c = parser->source->data[ctx.pos];
+            ctx.pos += bolt_parser_module_name(&ctx, script_buffer);
+        } else if (parser->source->data[ctx.pos] != ' ') {
+            if ((token = bolt_syntax_search_find_keyword(BOLT_OBJECT, &ctx))) {
+                ctx.pos += token + 1;
 
-            while ((c != '(')) {
-                if (c == ' ')
-                    c = parser->source->data[(ctx.pos + 1) + func_buffer_pos + 1];
+                ctx.pos += bolt_parser_object(&ctx, script_buffer);
+            } else if ((token = bolt_syntax_search_find_keyword(BOLT_FUNCTION, &ctx))) {
+                ctx.pos += token + 1;
 
-                function_buffer[func_buffer_pos] = c;
-
-                c = parser->source->data[(ctx.pos + 1) + func_buffer_pos++];
+                ctx.pos += bolt_parser_function(&ctx, script_buffer);
             }
-
-            char *func_name = malloc(func_buffer_pos + 1);
-
-            // Now we need to get the name of the function.
-            memcpy(func_name, function_buffer, func_buffer_pos);
-            func_name[func_buffer_pos] = '\0';
-
-            printf("function loaded: %s\n", func_name);
-
-            ctx.pos += func_buffer_pos + 1;
-      //      printf("char: %c\n", parser->source->data[ctx.pos]);
-
-            func_buffer_pos = 0;
-
-            // find block
-            int block_length = bolt_syntax_search_next_block(&ctx, function_buffer);
-
-            printf("block found, length: %i\n", block_length);
-            printf("function: %s\n", function_buffer);
-            free(func_name);
         }
 
         ctx.pos++;

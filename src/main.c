@@ -7,7 +7,9 @@
 int main() {
     bolt_lang_t *lang = bolt_lang_create();
 
+    bolt_lang_add_keyword(lang, "module", BOLT_MODULE_NAME);
     bolt_lang_add_keyword(lang, "app", BOLT_ENTRY_POINT);
+    bolt_lang_add_keyword(lang, "obj", BOLT_OBJECT);
     bolt_lang_add_keyword(lang, "func", BOLT_FUNCTION);
     bolt_lang_add_keyword(lang, "if", BOLT_IF_STATEMENT);
     bolt_lang_add_keyword(lang, "{", BOLT_BLOCK_START);

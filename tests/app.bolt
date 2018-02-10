@@ -1,4 +1,4 @@
-module app
+module app;
 
 obj User {
     id int

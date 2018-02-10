@@ -20,3 +20,5 @@ typedef struct bolt_syntax_search_ctx_s {
 int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_search_ctx_t *ctx);
 
 int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer);
+
+int bolt_syntax_search_until(bolt_syntax_search_ctx_t *ctx, char token, char *buffer);

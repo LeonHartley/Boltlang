@@ -6,11 +6,13 @@
 #define MAX_KEYWORDS 10
 
 typedef enum bolt_lang_keyword_type_e {
-    BOLT_ENTRY_POINT = 0,
+    BOLT_MODULE_NAME = 0,
+    BOLT_ENTRY_POINT,
     BOLT_FUNCTION,
     BOLT_IF_STATEMENT,
     BOLT_BLOCK_START,
-    BOLT_BLOCK_END
+    BOLT_BLOCK_END,
+    BOLT_OBJECT
 } bolt_lang_keyword_type;
 
 typedef struct bolt_lang_keyword_s {

@@ -6,6 +6,8 @@
 #define SEARCH_MODE_BLOCK 1
 
 typedef struct bolt_syntax_tree_s {
+	char *module_name;
+
 	void *entryPoint;
 } bolt_syntax_tree_t;
 

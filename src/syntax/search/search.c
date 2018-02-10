@@ -50,3 +50,19 @@ int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer) {
 
     return 0;
 }
+
+int bolt_syntax_search_until(bolt_syntax_search_ctx_t *ctx, char token, char *buffer) {
+    int length = 0;
+
+    for (int i = ctx->pos; i < (ctx->parser->source->data_length); i++) {
+        char c = ctx->parser->source->data[i];
+
+        if(c == token) {
+            break;
+        }
+
+        buffer[length++] = c;
+    }
+
+    return length;
+}

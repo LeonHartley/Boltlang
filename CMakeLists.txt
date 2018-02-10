@@ -12,4 +12,4 @@ add_executable(Boltlang
         src/syntax/syntax.c
         src/syntax/source/source_file.c
         src/syntax/search/search.c
-        src/syntax/search/search.h src/util/map.c src/util/map.h src/types/functions.c src/types/functions.h)
+        src/syntax/search/search.h src/util/map.c src/util/map.h src/types/functions.c src/types/functions.h src/util/hash.c src/util/hash.h)
