@@ -26,5 +26,5 @@ void bolt_lang_add_keyword(bolt_lang_t *lang, char *keyword_str, bolt_lang_keywo
     keyword->length = strlen(keyword_str);
     keyword->type = type;
 
-    lang->keywords[lang->keywords_count++] = keyword;
+    lang->keywords[type] = keyword;
 }
