@@ -1,3 +1,3 @@
 #pragma once
 
-unsigned long hash(unsigned char *str);
+long hash(char *str);

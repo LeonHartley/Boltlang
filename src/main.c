@@ -24,7 +24,7 @@ int main() {
 
     bolt_syntax_parser_t *parser = bolt_parser_create(lang, src);
 
-    if (bolt_parser_build_tree(parser)) {
+    if (bolt_parser_parse_script(parser)) {
         // Failed to build tree
         // check parser->errors
         printf("Failed to build syntax tree\n");

@@ -12,12 +12,9 @@ typedef struct bolt_syntax_search_ctx_s {
     bolt_syntax_search_mode mode;
 
     int pos;
-
-    int block_start_ctr;
-    int block_end_ctr;
 } bolt_syntax_search_ctx_t;
 
-int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_search_ctx_t *ctx);
+int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_search_ctx_t *ctx, int index);
 
 int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer);
 

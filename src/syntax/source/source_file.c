@@ -5,8 +5,6 @@ bolt_source_file_t *bolt_source_file_create() {
 }
 
 int bolt_source_file_load(const char *file_loc, bolt_source_file_t *file) {
-    int size = 0;
-
     FILE *f = fopen(file_loc, "rt");
 
     if (f == NULL) {

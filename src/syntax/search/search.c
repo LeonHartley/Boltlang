@@ -1,6 +1,6 @@
 #import "search.h"
 
-int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_search_ctx_t *ctx) {
+int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_search_ctx_t *ctx, int index) {
     bolt_lang_t *lang = ctx->parser->lang;
 
     bolt_lang_keyword_t *keyword = lang->keywords[type];
@@ -11,7 +11,7 @@ int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_sea
     }
 
     for (j = 0; j < keyword->length; j++) {
-        if (ctx->parser->source->data[ctx->pos + j] != keyword->keyword[j]) {
+        if (ctx->parser->source->data[index + j] != keyword->keyword[j]) {
             break;
         }
     }
@@ -25,7 +25,6 @@ int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_sea
 
 int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer) {
     int length = 0;
-
     int in_block = 0;
 
     for (int i = ctx->pos; i < (ctx->parser->source->data_length); i++) {
@@ -33,12 +32,12 @@ int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer) {
 
         buffer[length++] = c;
 
-        if (bolt_syntax_search_find_keyword(BOLT_BLOCK_START, ctx) == 1) {
+        if (bolt_syntax_search_find_keyword(BOLT_BLOCK_START, ctx, i) == 1) {
             in_block++;
-        } else if (bolt_syntax_search_find_keyword(BOLT_BLOCK_END, ctx) == 1) {
+        } else if (bolt_syntax_search_find_keyword(BOLT_BLOCK_END, ctx, i) == 1) {
             in_block--;
 
-            if (in_block == 0) {
+            if (in_block <= 0) {
                 buffer[length++] = '\0';
 
                 return length;
