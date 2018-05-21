@@ -1,10 +1,25 @@
 #pragma once
 
-typedef enum bolt_primitive_type_e {
-    BOLT_STRING = 0,
-    BOLT_INT
-} bolt_primitive_type;
+#include "../syntax/lang/lang.h"
+#include "../util/hash.h"
 
-bolt_primitive_type bolt_get_type(char *hash) {
-    return BOLT_STRING;
-}
+#define MAX_OBJECT_PROPERTIES 16 /* for now */
+
+typedef struct bolt_object_prop_s {
+    int identifier;
+    char *name;
+    bolt_lang_primitive_type type;
+} bolt_object_prop_t;
+
+typedef struct bolt_object_s {
+    int identifier;
+    char *name;
+    int property_count;
+    bolt_object_prop_t **properties;
+} bolt_object_t;
+
+bolt_object_t *bolt_object_create(char *name);
+
+void bolt_object_add_property(bolt_object_t *object, char *name, bolt_lang_primitive_type type);
+
+void bolt_object_dispose(bolt_object_t *object);

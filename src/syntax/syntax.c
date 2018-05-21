@@ -2,6 +2,7 @@
 
 #include "search/search.h"
 #include "../util/hash.h"
+#include "parsers/object.h"
 
 bolt_syntax_parser_t *bolt_parser_create(bolt_lang_t *lang, bolt_source_file_t *source_file) {
     bolt_syntax_parser_t *parser = (bolt_syntax_parser_t *) malloc(sizeof(bolt_syntax_parser_t));
@@ -39,6 +40,7 @@ int bolt_parser_function(bolt_syntax_search_ctx_t *ctx, char *buffer) {
 int bolt_parser_object(bolt_syntax_search_ctx_t *ctx, char *buffer) {
     int obj_name_len = bolt_syntax_search_until(ctx, ' ', buffer);
     char *obj_name = malloc((size_t) (obj_name_len + 1));
+    char obj_buffer[256];
 
     memcpy(obj_name, buffer, (size_t) obj_name_len);
 
@@ -54,6 +56,8 @@ int bolt_parser_object(bolt_syntax_search_ctx_t *ctx, char *buffer) {
 
     printf("object block found, length: %i\n", block_length);
     printf("object members: %s\n\n", buffer);
+
+    bolt_object_parser(ctx->parser->lang, obj_name, block_length, buffer);
 
     return block_length;
 }

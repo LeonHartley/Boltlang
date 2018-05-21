@@ -27,3 +27,7 @@ bolt_func_t *bolt_func_create(long id) {
 
     return func;
 }
+
+void bolt_func_add_arg(bolt_func_arg_t *arg, bolt_func_t *func) {
+
+}

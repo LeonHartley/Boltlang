@@ -1,3 +1,4 @@
+#include <ctype.h>
 #import "search.h"
 
 int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_search_ctx_t *ctx, int index) {
@@ -59,6 +60,29 @@ int bolt_syntax_search_until(bolt_syntax_search_ctx_t *ctx, char token, char *bu
         }
 
         buffer[length++] = c;
+    }
+
+    return length;
+}
+
+int bolt_syntax_next_word(int search_length, int start, char *search, char *buffer) {
+    int length = 0;
+
+    for(int i = start; i < search_length; i++) {
+        char c = search[i];
+
+        if(!isalnum(c)) {
+            if(length != 0)
+                break;
+            else
+                continue;
+        }
+
+        buffer[length++] = c;
+    }
+
+    if(length != 0) {
+        buffer[length++] = '\0';
     }
 
     return length;

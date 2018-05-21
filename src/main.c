@@ -1,10 +1,14 @@
 #include <stdio.h>
+#include <time.h>
 
 #include "syntax/lang/lang.h"
 #include "syntax/source/source_file.h"
 #include "syntax/syntax.h"
+#include "util/hash.h"
 
 int main() {
+    clock_t start = clock(), diff;
+
     bolt_lang_t *lang = bolt_lang_create();
 
     bolt_lang_add_keyword(lang, "module", BOLT_MODULE_NAME);
@@ -15,9 +19,15 @@ int main() {
     bolt_lang_add_keyword(lang, "{", BOLT_BLOCK_START);
     bolt_lang_add_keyword(lang, "}", BOLT_BLOCK_END);
 
+    bolt_lang_add_primitive(lang, "int", BOLT_INT);
+    bolt_lang_add_primitive(lang, "string", BOLT_STRING);
+    bolt_lang_add_primitive(lang, "long", BOLT_LONG);
+    bolt_lang_add_primitive(lang, "bool", BOLT_BOOL);
+    bolt_lang_add_primitive(lang, "byte", BOLT_BYTE);
+
     bolt_source_file_t *src = bolt_source_file_create();
 
-    if(bolt_source_file_load("tests/app.bolt", src)) {
+    if (bolt_source_file_load("tests/app.bolt", src)) {
         printf("Failed to load source file\n");
         return 1;
     }
@@ -31,7 +41,11 @@ int main() {
         return 1;
     }
 
-   // printf("compiled\n");
+    diff = clock() - start;
+
+
+    int msec = diff * 1000 / CLOCKS_PER_SEC;
+    printf("Time taken %d seconds %d milliseconds\n", msec/1000, msec%1000);
 
     return 0;
 }

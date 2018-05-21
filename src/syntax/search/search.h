@@ -19,3 +19,5 @@ int bolt_syntax_search_find_keyword(bolt_lang_keyword_type type, bolt_syntax_sea
 int bolt_syntax_search_next_block(bolt_syntax_search_ctx_t *ctx, char *buffer);
 
 int bolt_syntax_search_until(bolt_syntax_search_ctx_t *ctx, char token, char *buffer);
+
+int bolt_syntax_next_word(int search_length, int index, char *search, char *buffer);
